@@ -1,20 +1,21 @@
-import { Architecture } from "@/components/Architecture";
-import { Boundaries } from "@/components/Boundaries";
-import { CoreFunctions } from "@/components/CoreFunctions";
 import { Hero } from "@/components/Hero";
-import { Problem } from "@/components/Problem";
-import { AgentSimulator3D } from "@/components/three/AgentSimulator3D";
+import { Benchmarks } from "@/components/Benchmarks";
+import { Features } from "@/components/Features";
+import { ArchitectureFlow } from "@/components/ArchitectureFlow";
+import { Playground } from "@/components/Playground";
+import { Boundaries } from "@/components/Boundaries";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <Problem />
-      <CoreFunctions />
-      <Architecture />
-      <AgentSimulator3D />
+      <Benchmarks />
+      <Features />
+      <ArchitectureFlow />
+      <Playground />
       <Boundaries />
     </>
   );
 }
+
 

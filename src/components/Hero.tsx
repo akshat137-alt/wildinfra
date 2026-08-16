@@ -1,98 +1,83 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { HeroActions } from "@/components/hero/HeroActions";
+import { HeroProductPreview } from "@/components/hero/HeroProductPreview";
 import { fadeUpItem, staggerContainer } from "@/lib/motion";
-
-const HeroScene = dynamic(
-  () =>
-    import("@/components/three/HeroScene").then((mod) => mod.HeroScene),
-  {
-    ssr: false,
-    loading: () => <div className="absolute inset-0 -z-10 bg-[#020408]" />,
-  },
-);
 
 export function Hero() {
   return (
-    <section className="relative isolate min-h-[100svh] overflow-hidden bg-[#020408]">
-      <HeroScene />
+    <section className="relative isolate min-h-[100svh] overflow-hidden bg-[#020408] pb-24 pt-32 sm:pt-40">
+      {/* Subtle grid background */}
+      <div className="cyber-grid pointer-events-none absolute inset-0 opacity-40" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-sky-500/10 blur-[120px]" />
 
-      <div className="relative mx-auto flex min-h-[100svh] w-full max-w-6xl flex-col justify-center px-5 pb-24 pt-32 sm:px-8 lg:px-10">
+      <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-8">
         <motion.div
-          className="max-w-2xl"
+          className="mx-auto max-w-3xl text-center"
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
         >
-          {/* Animated Announcement Pill */}
-          <motion.div variants={fadeUpItem} className="inline-flex items-center gap-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-4 py-1.5 text-xs font-mono tracking-wider text-sky-300 backdrop-blur-xl shadow-[0_0_20px_rgba(56,189,248,0.25)]">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-sky-400" />
-              </span>
-              WILDINFRA RUNTIME v1.0 · LIVE
+          {/* Top Pill */}
+          <motion.div variants={fadeUpItem} className="inline-flex items-center justify-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1 font-mono text-xs text-zinc-300 backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Public Beta v1.0 · Rust Semantic Runtime
             </span>
           </motion.div>
 
           <motion.h1
             variants={fadeUpItem}
-            className="font-display mt-6 text-4xl font-extrabold tracking-[-0.04em] text-white sm:text-6xl sm:leading-[1.05] lg:text-7xl lg:leading-[1.02]"
+            className="font-display mt-6 text-4xl font-bold tracking-[-0.04em] text-white sm:text-6xl sm:leading-[1.08] lg:text-7xl lg:leading-[1.05]"
           >
-            The Execution Layer for{" "}
-            <span className="bg-gradient-to-r from-sky-400 via-teal-200 to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(56,189,248,0.3)]">
-              Planetary-Scale AI.
-            </span>
+            The headless semantic runtime for AI agents.
           </motion.h1>
 
           <motion.p
             variants={fadeUpItem}
-            className="mt-6 max-w-xl text-base leading-8 text-slate-300 sm:text-lg sm:leading-8"
+            className="mx-auto mt-6 max-w-2xl text-base leading-8 text-zinc-400 sm:text-lg sm:leading-8"
           >
-            A programmable, semantic browsing runtime built exclusively for AI
-            agents. We bypass visual DOM rendering to deliver structured, intent-aware action graphs at sub-millisecond speeds.
+            Run 100,000 parallel agent browsing sessions on a single server node. Zero pixel rendering, 4ms DOM-to-Action compilation, and &lt;2MB RAM per session.
           </motion.p>
 
-          <motion.div variants={fadeUpItem} className="mt-10 flex flex-wrap items-center gap-4">
+          <motion.div variants={fadeUpItem} className="mt-8 flex justify-center">
             <HeroActions />
           </motion.div>
-
-          {/* Glassmorphic Metrics Card */}
-          <motion.div
-            variants={fadeUpItem}
-            className="glass-panel mt-12 grid max-w-xl grid-cols-3 gap-4 rounded-2xl p-5"
-          >
-            <div>
-              <div className="font-mono text-[10px] font-semibold tracking-wider text-slate-400 uppercase">
-                Agent Concurrency
-              </div>
-              <div className="font-display mt-1 text-lg font-bold text-white sm:text-xl">
-                500B Scale
-              </div>
-            </div>
-            <div className="border-l border-white/10 pl-4">
-              <div className="font-mono text-[10px] font-semibold tracking-wider text-slate-400 uppercase">
-                Pixel Overhead
-              </div>
-              <div className="font-display mt-1 text-lg font-bold text-emerald-400 sm:text-xl">
-                0% (Renderless)
-              </div>
-            </div>
-            <div className="border-l border-white/10 pl-4">
-              <div className="font-mono text-[10px] font-semibold tracking-wider text-slate-400 uppercase">
-                Intent Latency
-              </div>
-              <div className="font-display mt-1 text-lg font-bold text-sky-400 sm:text-xl">
-                &lt; 0.4ms
-              </div>
-            </div>
-          </motion.div>
         </motion.div>
+
+        {/* Live Code / Product Visualizer */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <HeroProductPreview />
+        </motion.div>
+
+        {/* Quick Highlights Bar */}
+        <div className="mt-12 grid grid-cols-2 gap-4 border-t border-white/[0.08] pt-8 sm:grid-cols-4 font-mono text-xs">
+          <div>
+            <div className="text-zinc-500 uppercase tracking-wider text-[10px]">Cold Start Time</div>
+            <div className="mt-1 text-sm font-semibold text-emerald-400">4.2ms</div>
+          </div>
+          <div>
+            <div className="text-zinc-500 uppercase tracking-wider text-[10px]">Memory / Session</div>
+            <div className="mt-1 text-sm font-semibold text-white">&lt; 1.8 MB (99.5% saved)</div>
+          </div>
+          <div>
+            <div className="text-zinc-500 uppercase tracking-wider text-[10px]">Per-Node Concurrency</div>
+            <div className="mt-1 text-sm font-semibold text-sky-400">100K Parallel Agents</div>
+          </div>
+          <div>
+            <div className="text-zinc-500 uppercase tracking-wider text-[10px]">Render Overhead</div>
+            <div className="mt-1 text-sm font-semibold text-white">0% (Pure Headless)</div>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
+
 
 
