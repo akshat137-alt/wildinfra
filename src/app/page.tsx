@@ -1,21 +1,27 @@
 import { Hero } from "@/components/Hero";
+import { ProblemSection } from "@/components/ProblemSection";
+import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
 import { Benchmarks } from "@/components/Benchmarks";
-import { Features } from "@/components/Features";
-import { ArchitectureFlow } from "@/components/ArchitectureFlow";
-import { Playground } from "@/components/Playground";
-import { Boundaries } from "@/components/Boundaries";
+import { UseCases } from "@/components/UseCases";
+import { Pricing } from "@/components/Pricing";
+import { FAQ } from "@/components/FAQ";
+import { CTA } from "@/components/CTA";
 
 export default function Home() {
   return (
     <>
       <Hero />
+      <ProblemSection />
+      <ArchitectureDiagram />
       <Benchmarks />
-      <Features />
-      <ArchitectureFlow />
-      <Playground />
-      <Boundaries />
+      <UseCases />
+      <Pricing />
+      <FAQ />
+      <CTA />
     </>
   );
 }
+
+
 
 
