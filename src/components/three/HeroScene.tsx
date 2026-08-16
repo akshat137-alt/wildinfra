@@ -6,10 +6,10 @@ import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import type { Group, Mesh } from "three";
 
-function DataPacket({
+function PhotonBeam({
   start,
   end,
-  speed = 1,
+  speed = 1.2,
   color = "#38bdf8",
 }: {
   start: [number, number, number];
@@ -22,7 +22,7 @@ function DataPacket({
 
   useFrame((_, delta) => {
     if (!meshRef.current) return;
-    progress.current = (progress.current + delta * speed * 0.5) % 1;
+    progress.current = (progress.current + delta * speed * 0.7) % 1;
     const p = progress.current;
     meshRef.current.position.set(
       THREE.MathUtils.lerp(start[0], end[0], p),
@@ -33,78 +33,114 @@ function DataPacket({
 
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[0.035, 12, 12]} />
+      <sphereGeometry args={[0.045, 16, 16]} />
       <meshBasicMaterial color={color} />
     </mesh>
   );
 }
 
-function PlanetaryCore() {
-  const outerCoreRef = useRef<Mesh>(null);
-  const innerCoreRef = useRef<Mesh>(null);
-  const haloRingRef = useRef<Mesh>(null);
+function HyperCore() {
+  const innerSphereRef = useRef<Mesh>(null);
+  const outerGeodesicRef = useRef<Mesh>(null);
+  const ring1Ref = useRef<Mesh>(null);
+  const ring2Ref = useRef<Mesh>(null);
+  const ring3Ref = useRef<Mesh>(null);
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
-    if (outerCoreRef.current) {
-      outerCoreRef.current.rotation.y = t * 0.15;
-      outerCoreRef.current.rotation.x = Math.sin(t * 0.1) * 0.1;
+    if (innerSphereRef.current) {
+      innerSphereRef.current.rotation.y = -t * 0.3;
+      innerSphereRef.current.rotation.x = Math.sin(t * 0.2) * 0.15;
     }
-    if (innerCoreRef.current) {
-      innerCoreRef.current.rotation.y = -t * 0.25;
-      innerCoreRef.current.rotation.z = t * 0.08;
+    if (outerGeodesicRef.current) {
+      outerGeodesicRef.current.rotation.y = t * 0.2;
+      outerGeodesicRef.current.rotation.z = t * 0.1;
     }
-    if (haloRingRef.current) {
-      haloRingRef.current.rotation.z = t * 0.2;
-      haloRingRef.current.rotation.x = Math.PI / 2.3 + Math.sin(t * 0.15) * 0.05;
+    if (ring1Ref.current) {
+      ring1Ref.current.rotation.z = t * 0.25;
+      ring1Ref.current.rotation.x = Math.PI / 2.3 + Math.sin(t * 0.1) * 0.08;
+    }
+    if (ring2Ref.current) {
+      ring2Ref.current.rotation.y = -t * 0.35;
+      ring2Ref.current.rotation.z = Math.PI / 3 + Math.cos(t * 0.15) * 0.1;
+    }
+    if (ring3Ref.current) {
+      ring3Ref.current.rotation.x = t * 0.4;
+      ring3Ref.current.rotation.y = Math.PI / 4;
     }
   });
 
   return (
-    <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
-      <group position={[1.2, 0.2, 0]}>
-        <mesh ref={innerCoreRef}>
-          <icosahedronGeometry args={[0.85, 2]} />
+    <Float speed={2} rotationIntensity={0.25} floatIntensity={0.4}>
+      <group position={[1.4, 0.25, 0]}>
+        {/* Glowing Center Nucleus */}
+        <mesh>
+          <sphereGeometry args={[0.48, 32, 32]} />
           <meshStandardMaterial
-            color="#0ea5e9"
-            wireframe
-            transparent
-            opacity={0.4}
-            emissive="#0284c7"
-            emissiveIntensity={0.6}
+            color="#ffffff"
+            emissive="#ffffff"
+            emissiveIntensity={1.2}
+            roughness={0.05}
           />
         </mesh>
 
-        <mesh ref={outerCoreRef}>
-          <icosahedronGeometry args={[1.35, 1]} />
+        {/* Inner Octahedron Lattice */}
+        <mesh ref={innerSphereRef}>
+          <octahedronGeometry args={[0.95, 2]} />
+          <meshStandardMaterial
+            color="#00f0ff"
+            wireframe
+            transparent
+            opacity={0.65}
+            emissive="#0284c7"
+            emissiveIntensity={0.8}
+          />
+        </mesh>
+
+        {/* Outer Geodesic Sphere */}
+        <mesh ref={outerGeodesicRef}>
+          <icosahedronGeometry args={[1.5, 1]} />
           <meshStandardMaterial
             color="#38bdf8"
             wireframe
             transparent
-            opacity={0.2}
+            opacity={0.3}
             emissive="#38bdf8"
-            emissiveIntensity={0.3}
+            emissiveIntensity={0.5}
           />
         </mesh>
 
-        <mesh ref={haloRingRef}>
-          <torusGeometry args={[1.9, 0.015, 16, 120]} />
+        {/* Triple Concentric Cyber Rings */}
+        <mesh ref={ring1Ref}>
+          <torusGeometry args={[2.05, 0.018, 16, 120]} />
           <meshStandardMaterial
-            color="#f4f4f5"
-            emissive="#38bdf8"
-            emissiveIntensity={0.8}
+            color="#38bdf8"
+            emissive="#0284c7"
+            emissiveIntensity={1}
             metalness={0.9}
             roughness={0.1}
           />
         </mesh>
 
-        <mesh>
-          <sphereGeometry args={[0.42, 32, 32]} />
+        <mesh ref={ring2Ref}>
+          <torusGeometry args={[1.75, 0.012, 16, 100]} />
           <meshStandardMaterial
-            color="#ffffff"
-            emissive="#ffffff"
-            emissiveIntensity={1}
-            roughness={0.1}
+            color="#34d399"
+            emissive="#059669"
+            emissiveIntensity={0.9}
+            metalness={0.8}
+            roughness={0.2}
+          />
+        </mesh>
+
+        <mesh ref={ring3Ref}>
+          <torusGeometry args={[1.35, 0.009, 16, 80]} />
+          <meshStandardMaterial
+            color="#818cf8"
+            emissive="#4f46e5"
+            emissiveIntensity={0.8}
+            metalness={0.8}
+            roughness={0.2}
           />
         </mesh>
       </group>
@@ -112,141 +148,143 @@ function PlanetaryCore() {
   );
 }
 
-function AgentNetwork() {
+function GlobalMeshNetwork() {
   const groupRef = useRef<Group>(null);
 
-  const { positions, links, packetPaths } = useMemo(() => {
-    const count = 36;
+  const { positions, links, photonBeams } = useMemo(() => {
+    const count = 42;
     const positions: [number, number, number][] = [];
     for (let i = 0; i < count; i++) {
       const theta = (i / count) * Math.PI * 2;
-      const radius = 1.6 + (i % 6) * 0.4;
-      const y = Math.sin(i * 0.85) * 1.3 + ((i % 4) - 1.5) * 0.3;
+      const radius = 1.7 + (i % 7) * 0.4;
+      const y = Math.sin(i * 0.8) * 1.5 + ((i % 5) - 2) * 0.25;
       positions.push([
-        Math.cos(theta) * radius + 1.2,
-        y + 0.2,
-        Math.sin(theta) * radius * 0.85,
+        Math.cos(theta) * radius + 1.4,
+        y + 0.25,
+        Math.sin(theta) * radius * 0.9,
       ]);
     }
 
     const links: [number, number][] = [];
-    const packetPaths: { start: [number, number, number]; end: [number, number, number]; speed: number }[] = [];
+    const photonBeams: { start: [number, number, number]; end: [number, number, number]; speed: number; color: string }[] = [];
 
     for (let i = 0; i < count; i++) {
       const next = (i + 1) % count;
-      const cross = (i + 5) % count;
+      const cross = (i + 6) % count;
       links.push([i, next]);
       links.push([i, cross]);
 
-      if (i % 3 === 0) {
-        packetPaths.push({
+      if (i % 2 === 0) {
+        photonBeams.push({
           start: positions[i],
           end: positions[next],
-          speed: 0.8 + (i % 4) * 0.3,
+          speed: 1.1 + (i % 3) * 0.4,
+          color: i % 4 === 0 ? "#00f0ff" : i % 6 === 0 ? "#34d399" : "#38bdf8",
         });
       }
     }
 
-    return { positions, links, packetPaths };
+    return { positions, links, photonBeams };
   }, []);
 
   useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.getElapsedTime();
-    groupRef.current.rotation.y = t * 0.08;
+    groupRef.current.rotation.y = t * 0.07;
   });
 
   return (
     <group ref={groupRef}>
       {links.map(([a, b], i) => (
         <Line
-          key={`link-${i}`}
+          key={`l-${i}`}
           points={[positions[a], positions[b]]}
-          color={i % 4 === 0 ? "#38bdf8" : "#475569"}
-          lineWidth={i % 4 === 0 ? 1.5 : 0.8}
+          color={i % 3 === 0 ? "#38bdf8" : i % 5 === 0 ? "#34d399" : "#334155"}
+          lineWidth={i % 3 === 0 ? 1.6 : 0.9}
           transparent
-          opacity={i % 4 === 0 ? 0.65 : 0.3}
+          opacity={i % 3 === 0 ? 0.7 : 0.25}
         />
       ))}
 
       {positions.map((pos, i) => (
-        <mesh key={`node-${i}`} position={pos}>
-          <sphereGeometry args={[i % 6 === 0 ? 0.065 : 0.04, 16, 16]} />
+        <mesh key={`n-${i}`} position={pos}>
+          <sphereGeometry args={[i % 5 === 0 ? 0.075 : 0.045, 16, 16]} />
           <meshStandardMaterial
-            color={i % 6 === 0 ? "#38bdf8" : "#e2e8f0"}
-            emissive={i % 6 === 0 ? "#0284c7" : "#64748b"}
-            emissiveIntensity={i % 6 === 0 ? 0.9 : 0.3}
-            roughness={0.2}
-            metalness={0.8}
+            color={i % 5 === 0 ? "#00f0ff" : "#cbd5e1"}
+            emissive={i % 5 === 0 ? "#0284c7" : "#475569"}
+            emissiveIntensity={i % 5 === 0 ? 1.2 : 0.4}
+            roughness={0.15}
+            metalness={0.85}
           />
         </mesh>
       ))}
 
-      {packetPaths.map((p, i) => (
-        <DataPacket key={`pkt-${i}`} start={p.start} end={p.end} speed={p.speed} />
+      {photonBeams.map((p, i) => (
+        <PhotonBeam key={`pb-${i}`} start={p.start} end={p.end} speed={p.speed} color={p.color} />
       ))}
     </group>
   );
 }
 
 function SceneRig() {
-  const cameraGroupRef = useRef<Group>(null);
+  const rigRef = useRef<Group>(null);
 
   useFrame((state) => {
-    if (!cameraGroupRef.current) return;
-    const targetX = state.pointer.x * 0.4;
-    const targetY = state.pointer.y * 0.3;
-    cameraGroupRef.current.rotation.y = THREE.MathUtils.lerp(
-      cameraGroupRef.current.rotation.y,
-      targetX * 0.5,
+    if (!rigRef.current) return;
+    const targetX = state.pointer.x * 0.45;
+    const targetY = state.pointer.y * 0.35;
+    rigRef.current.rotation.y = THREE.MathUtils.lerp(
+      rigRef.current.rotation.y,
+      targetX * 0.6,
       0.05
     );
-    cameraGroupRef.current.rotation.x = THREE.MathUtils.lerp(
-      cameraGroupRef.current.rotation.x,
-      -targetY * 0.4,
+    rigRef.current.rotation.x = THREE.MathUtils.lerp(
+      rigRef.current.rotation.x,
+      -targetY * 0.45,
       0.05
     );
   });
 
   return (
-    <group ref={cameraGroupRef}>
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[5, 8, 4]} intensity={1.5} color="#ffffff" />
-      <pointLight position={[-4, 3, -2]} intensity={0.8} color="#38bdf8" />
-      <pointLight position={[3, -2, 2]} intensity={0.6} color="#818cf8" />
+    <group ref={rigRef}>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[6, 9, 5]} intensity={1.8} color="#ffffff" />
+      <pointLight position={[-4, 4, -2]} intensity={1.2} color="#00f0ff" />
+      <pointLight position={[4, -3, 3]} intensity={1} color="#818cf8" />
+      <pointLight position={[1.4, 0.25, 0]} intensity={2} color="#38bdf8" distance={6} />
 
-      <PlanetaryCore />
-      <AgentNetwork />
+      <HyperCore />
+      <GlobalMeshNetwork />
 
       <Sparkles
-        count={150}
-        scale={[12, 8, 12]}
-        size={2.5}
-        speed={0.4}
+        count={220}
+        scale={[14, 9, 14]}
+        size={3}
+        speed={0.5}
         color="#38bdf8"
       />
 
       <Stars
-        radius={50}
-        depth={40}
-        count={1500}
-        factor={3}
+        radius={55}
+        depth={45}
+        count={2000}
+        factor={3.5}
         saturation={0}
         fade
-        speed={0.4}
+        speed={0.5}
       />
 
       <Grid
-        position={[0, -2.2, 0]}
-        args={[30, 30]}
+        position={[0, -2.4, 0]}
+        args={[36, 36]}
         cellSize={0.5}
         cellThickness={0.8}
-        cellColor="#1e293b"
+        cellColor="#0f172a"
         sectionSize={2.5}
-        sectionThickness={1.2}
+        sectionThickness={1.4}
         sectionColor="#0284c7"
-        fadeDistance={18}
-        fadeStrength={1.2}
+        fadeDistance={20}
+        fadeStrength={1.3}
         infiniteGrid
       />
     </group>
@@ -255,21 +293,23 @@ function SceneRig() {
 
 export function HeroScene() {
   return (
-    <div className="absolute inset-0 -z-10 bg-black">
+    <div className="absolute inset-0 -z-10 bg-[#020408]">
       <Canvas
         dpr={[1, 2]}
-        camera={{ position: [0, 0.8, 5.5], fov: 42, near: 0.1, far: 50 }}
+        camera={{ position: [0, 0.8, 5.8], fov: 42, near: 0.1, far: 60 }}
         gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       >
         <color attach="background" args={["#020408"]} />
-        <fog attach="fog" args={["#020408", 7, 22]} />
+        <fog attach="fog" args={["#020408", 8, 24]} />
         <SceneRig />
       </Canvas>
 
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent lg:via-black/50" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/90 to-transparent" />
+      {/* Modern gradient overlays */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#020408] via-[#020408]/85 to-transparent lg:via-[#020408]/50" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-[#020408] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#020408]/95 to-transparent" />
     </div>
   );
 }
+
 

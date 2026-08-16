@@ -10,7 +10,7 @@ const PipelineScene = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-[320px] w-full rounded-2xl border border-white/10 bg-zinc-950 sm:h-[400px]" />
+      <div className="h-[340px] w-full rounded-2xl border border-white/10 bg-slate-950 sm:h-[420px]" />
     ),
   }
 );
@@ -20,28 +20,31 @@ const coreFunctions = [
     id: "translate",
     index: "01",
     title: "Translate",
-    subtitle: "Semantic Parser Engine",
+    subtitle: "Semantic Graph Parser",
     description:
-      "Converts raw web content—HTML and JS-rendered DOM—into structured, intent-aware action graphs in real time. Agents receive semantic intent, not raw markup.",
-    badge: "SEMANTIC GRAPH",
+      "Converts raw HTML and JS-rendered client DOM trees into structured, intent-aware action graphs in real-time. Eliminates layout calculation and pixel rendering.",
+    badge: "SUB-MS PARSE",
+    codeSample: "DOM_TREE -> { action: 'SUBMIT_ORDER', targets: ['#btn-pay', 'price: $49.00'] }",
   },
   {
     id: "expose",
     index: "02",
     title: "Expose",
-    subtitle: "Unified Agent Protocol",
+    subtitle: "Unified Agent-Web Protocol",
     description:
-      "A stable, versioned agent-web protocol that abstracts over live web inconsistencies. Agents declare intent rather than issuing imperative browser commands.",
-    badge: "STABLE PROTOCOL",
+      "A stable, versioned protocol that shields AI reasoning models from web entropy, dynamic A/B test variations, and structural DOM mutations.",
+    badge: "VERSIONED IPC",
+    codeSample: "wildinfra.exposeProtocol({ version: 'v1.4', strictSchema: true })",
   },
   {
     id: "execute",
     index: "03",
     title: "Execute",
-    subtitle: "Stateless Parallel Runtime",
+    subtitle: "Stateless Session Mesh",
     description:
-      "Stateless, session-scoped execution at horizontal scale. Run thousands of parallel agent sessions without state bleed or redundant rendering.",
-    badge: "500B HORIZONTAL MESH",
+      "Stateless, micro-isolated execution across horizontal clusters. Run hundreds of thousands of parallel agent sessions without state bleed or memory leaks.",
+    badge: "500B HORIZONTAL",
+    codeSample: "mesh.dispatch({ concurrency: 10000, isolations: 'hard_memory_sandbox' })",
   },
 ] as const;
 
@@ -52,7 +55,7 @@ export function CoreFunctions() {
     <section
       id="features"
       aria-labelledby="features-heading"
-      className="border-t border-white/10 bg-black py-24 sm:py-32"
+      className="border-t border-white/10 bg-[#020408] py-28 sm:py-36"
     >
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <motion.div
@@ -62,24 +65,24 @@ export function CoreFunctions() {
           variants={staggerContainer}
         >
           <motion.div variants={fadeUpItem} className="max-w-2xl">
-            <span className="inline-flex items-center gap-2 font-mono text-xs tracking-widest text-sky-400 uppercase">
+            <span className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-3.5 py-1 font-mono text-xs tracking-wider text-sky-400 uppercase">
               <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
-              Core Architecture
+              Runtime Mechanics
             </span>
             <h2
               id="features-heading"
-              className="font-display mt-4 text-3xl font-bold tracking-[-0.03em] text-white sm:text-4xl lg:text-5xl"
+              className="font-display mt-5 text-3xl font-extrabold tracking-[-0.03em] text-white sm:text-5xl lg:text-6xl"
             >
-              Three irreducible runtime functions.
+              Three irreducible functions.
             </h2>
-            <p className="mt-4 text-base leading-7 text-zinc-400">
-              Translate. Expose. Execute. Everything else is implementation detail.
+            <p className="mt-5 text-base leading-8 text-slate-300 sm:text-lg">
+              Translate. Expose. Execute. Everything else in browser technology is human perception legacy.
             </p>
           </motion.div>
 
-          <div className="mt-14 grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+          <div className="mt-16 grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
             {/* Interactive Stage Selector Cards */}
-            <div className="space-y-4 lg:col-span-7">
+            <div className="space-y-4 lg:col-span-6">
               {coreFunctions.map((fn, idx) => {
                 const isActive = activeStage === idx;
                 return (
@@ -87,40 +90,52 @@ export function CoreFunctions() {
                     key={fn.id}
                     variants={fadeUpItem}
                     onClick={() => setActiveStage(idx)}
-                    className={`cursor-pointer rounded-xl border p-6 transition-all duration-300 ${
+                    className={`cursor-pointer rounded-2xl border p-6 transition-all duration-300 ${
                       isActive
-                        ? "border-sky-500/50 bg-gradient-to-r from-sky-500/10 to-transparent shadow-[0_0_30px_rgba(56,189,248,0.15)]"
-                        : "border-white/10 bg-zinc-950/60 hover:border-white/20 hover:bg-zinc-900/60"
+                        ? "border-sky-400/60 bg-gradient-to-r from-sky-500/15 via-slate-900/80 to-transparent shadow-[0_0_35px_rgba(56,189,248,0.2)] scale-[1.02]"
+                        : "border-white/10 bg-slate-950/60 hover:border-white/20 hover:bg-slate-900/60"
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <span className="font-mono text-xs font-semibold text-sky-400">
+                        <span className={`font-mono text-xs font-bold ${isActive ? "text-sky-400" : "text-slate-500"}`}>
                           {fn.index}
                         </span>
-                        <h3 className="font-display text-xl font-semibold text-white">
-                          {fn.title}
-                        </h3>
+                        <div>
+                          <h3 className="font-display text-xl font-bold text-white">
+                            {fn.title}
+                          </h3>
+                          <div className="text-xs text-slate-400 font-mono">{fn.subtitle}</div>
+                        </div>
                       </div>
-                      <span className="font-mono text-[10px] tracking-wider text-zinc-400 border border-white/10 px-2 py-0.5 rounded-full">
+                      <span className="font-mono text-[10px] font-semibold tracking-wider text-sky-300 border border-sky-400/20 bg-sky-500/10 px-2.5 py-1 rounded-full">
                         {fn.badge}
                       </span>
                     </div>
 
-                    <p className="mt-3 text-sm leading-6 text-zinc-400">
+                    <p className="mt-4 text-sm leading-7 text-slate-300">
                       {fn.description}
                     </p>
+
+                    {isActive && (
+                      <div className="mt-4 rounded-lg border border-sky-500/20 bg-black/80 px-3.5 py-2 font-mono text-[11px] text-emerald-400 overflow-x-auto">
+                        <code>{fn.codeSample}</code>
+                      </div>
+                    )}
                   </motion.div>
                 );
               })}
             </div>
 
             {/* 3D Pipeline Scene Visualizer */}
-            <motion.div variants={fadeUpItem} className="lg:col-span-5">
+            <motion.div variants={fadeUpItem} className="lg:col-span-6">
               <PipelineScene activeStage={activeStage} />
-              <div className="mt-3 flex items-center justify-between font-mono text-[11px] text-zinc-500 px-1">
-                <span>STAGE 0{activeStage + 1} ACTIVE</span>
-                <span className="text-sky-400">INTERACTIVE 3D MODEL</span>
+              <div className="mt-4 flex items-center justify-between font-mono text-xs text-slate-400 px-2">
+                <span className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-sky-400 animate-pulse" />
+                  STAGE 0{activeStage + 1} VISUALIZER
+                </span>
+                <span className="text-sky-400 font-semibold">CLICK TABS TO SWITCH 3D STAGE</span>
               </div>
             </motion.div>
           </div>
@@ -129,4 +144,5 @@ export function CoreFunctions() {
     </section>
   );
 }
+
 
